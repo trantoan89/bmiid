@@ -1,0 +1,15 @@
+.test{
+  color:blue;
+}
+.border{
+  border:1px solid;
+}
+.shadowBox{
+  box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.2);
+}
+.inlineBlock{
+  display:inline !important;
+}
+.orange{
+  background-color:orange;
+}

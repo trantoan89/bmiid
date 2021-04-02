@@ -1,0 +1,64 @@
+.linkHover:hover{
+  border-bottom:2px solid;
+}
+.active{
+  border-bottom:2px solid;
+}
+.homeLink{
+  border-bottom:2px solid #fff;
+}
+.registerHover{
+  transition: 0.5s ease;
+}
+.registerHover:hover{
+  border:2px solid blue;
+  color: blue;
+}
+/* .closeText{
+  display:none;
+} */
+.timesBtn:hover .closetext{
+  background-color: blue;
+}
+
+.tableCustom{
+  padding:15px;
+}
+
+.textWrap{
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.deleteText{
+  display:none;
+}
+.editText{
+  display:none;
+}
+.deleteBtn:hover .deleteText{
+  display:block;
+}
+.editBtn:hover .editText{
+  display:block;
+}
+
+
+
+/*transition effects*/
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+/*end of transition effects*/
+
+
+/*responsive*/
+@media (max-width: 766px) {
+  .ulLink1 {
+    display:none;
+  }
+}
+/*end of responsive*/
