@@ -15,14 +15,17 @@
           <p class="text-center font-semibold text-sm" id="dateReport"></p>
         </div>
         <div class="flex justify-center">
-          <select v-on:change="diseaseChange" class="px-7 py-2" v-model="chart_form.disease_id">
+          <select id="disease_id" v-on:change="diseaseChange" class="px-7 py-2" v-model="chart_form.disease_id">
             <option v-for="d in disease_names" :key="d.id" :value="d.id">{{ d.disease_name }}</option>
           </select>
-          <select v-on:change="diseaseChange" class="px-7 py-2 ml-2" v-model="chart_form.years">
-            <option value="2021" selected>2021</option>
-            <option v-for="y in countYear" :key="y" :value="currYear + y">{{ currYear + y }}</option>
+          <select id="year" v-on:change="diseaseChange" class="px-7 py-2 ml-2" v-model="chart_form.years">
+            <option v-for="y in case_years" :key="y" :value="y">{{ y }}</option>
           </select>
-          <button v-on:click="createdPDF" class="px-7 py-2 ml-2 border border-blue-700 text-blue-700 cursor pointer hover:border-blue-500 hover:text-blue-500"> Generate Report </button>
+          <select id="month" class="px-7 py-2 ml-2" v-model="chart_form.month" title="Select <month> for generate report for whole year">
+            <option value="0" style="color: rgba(0, 0, 0, 0.6)" selected>&lt;month&gt;</option>
+            <option v-for="(m, k) in datacollection.labels" :key="k" :value="k+1">{{ m }}</option>
+          </select>
+          <button v-on:click="getPDF" class="px-7 py-2 ml-2 border border-blue-700 text-blue-700 cursor pointer hover:border-blue-500 hover:text-blue-500"> Generate Report </button>
         </div>
       </div>
       <div class="mt-16 w-full">
@@ -90,12 +93,12 @@
         pieLabel: '',
         barLabel: '',
         totalDisease: [],
-        currYear: 2021,
-        countYear: 0,
+        case_years: [],
         disease_names: [],
         chart_form: {
           disease_id: '',
-          years: '2021',
+          years: case_min_year,
+          month: 1
         },
         chart_form2: {
           disease_id: '',
@@ -169,14 +172,24 @@
     created(){
       document.title = "BMIID(Dashboard)";
       
-      var currentTime = new Date();
-      var year = currentTime.getFullYear();
-      this.countYear = year - this.currYear;
+        const year = (new Date()).getFullYear();
+        const length = year - case_min_year + 1;
+        this.case_years = Array.from({ length }, (_, i) => case_min_year + i);
 
       this.allDisease();
       this.totalDiseaseCase();
     },
     methods: {
+        getPDF: function () {
+            var year = this.chart_form.years;
+            var month = this.chart_form.month;
+            if (month < 10) month = '0' + month;
+            var disease_id = this.chart_form.disease_id;
+            
+            var date = year + '-' + month + '-00';
+            
+            window.open('casesview?date=' + date + '&dsid=' + disease_id);
+        },
       createdPDF: function(){
         let bar = document.getElementById("bar");
         let pie = document.getElementById("pie");
@@ -184,8 +197,8 @@
         let ele = document.getElementById('report');
         ele.innerHTML += 'Generated report by: '+ this.$page.props.user.first_name +' '+ this.$page.props.user.last_name +'';
 
-        let ele2 = document.getElementById('report2');
-        ele2.innerHTML += 'Generated report by: '+ this.$page.props.user.first_name +' '+ this.$page.props.user.last_name +'';
+        // let ele2 = document.getElementById('report2');
+        // ele2.innerHTML += 'Generated report by: '+ this.$page.props.user.first_name +' '+ this.$page.props.user.last_name +'';
         
         let ele3 = document.getElementById('dateReport');
         let ele4 = document.getElementById('dateReport2');
@@ -205,7 +218,6 @@
         };
 
         axios.post('api/pie_graph', this.chart_form2).then(response => {
-          console.log(response.data);
           this.dataChart = {
             hoverBackgroundColor: "red",
             hoverBorderWidth: 10,
@@ -229,6 +241,7 @@
         for (var i = 0; i < this.disease_names.length; i++) {
           if(this.chart_form.disease_id === this.disease_names[i].id){
             this.pieLabel = this.disease_names[i].disease_name;
+            this.barLabel = this.disease_names[i].disease_name;
           }
         };
         
@@ -255,7 +268,7 @@
           this.chart_form2.disease_id = response.data.data[0].id;
           this.barLabel = response.data.data[0].disease_name;
           this.pieLabel = response.data.data[0].disease_name;
-          this.chart_form.years = 2021;
+          this.chart_form.years = case_min_year;
         }).then(() => {
           this.diseaseChange();
           this.diseaseChangePie();

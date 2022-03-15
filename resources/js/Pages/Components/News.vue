@@ -60,7 +60,7 @@
                       <input v-if="!newsArr.show" type="checkbox" :value="newsArr.id" v-model="newsIds" v:on:click="select" class="h-4 w-4 text-gray-700 border rounded mr-2 cursor-pointer">
                     </div>
                   </td>
-                  <td class="p-3 border">
+                  <!-- <td class="p-3 border">
                     <div class="w-11 flex justify-center">
                       <button class="p-1 border border-green-500 rounded text-center relative editBtn" v-on:click="newsEdit(newsArr, 'edit')">
                         <i class="far fa-edit text-sm md:text-base text-green-500"></i>
@@ -71,7 +71,7 @@
                         <p class="absolute text-sm px-2 top-5 -right-2 bg-white border border-black z-10 deleteText">Delete</p>
                       </button>
                     </div>
-                  </td>
+                  </td> -->
                   <td class="p-3 border"><p class="w-28 text-sm md:text-base md:w-36">{{ newsArr.news_date | moment("MMM Do, YYYY") }}</p></td>
                   <td class="p-3 border">
                     <article class="w-60 text-sm md:w-80 md:text-base">

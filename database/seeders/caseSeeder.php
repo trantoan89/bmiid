@@ -15,6 +15,6 @@ class caseSeeder extends Seeder
     public function run()
     {
         //
-        CasesModel::factory()->count(50)->create();
+        CasesModel::factory()->count(250)->create();
     }
 }

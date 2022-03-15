@@ -98,6 +98,6 @@ Route::get('/barangay', [BarangayController::class, 'index']);
 Route::get('/allbarangay', [BarangayController::class, 'allBarangays']);
 
 
-Route::post('/auth', [AuthController::class, 'login']);
+// Route::post('/auth', [AuthController::class, 'login']);
 
 

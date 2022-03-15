@@ -5,9 +5,11 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DiseaseResource;
 use App\Http\Resources\CasesCountResource;
+use App\Http\Resources\RiskResource;
 use Illuminate\Http\Request;
 use App\Models\DiseaseModel;
 use App\Models\CasesModel;
+use App\Models\Risk;
 use Illuminate\Support\Facades\Auth;
 
 class DiseaseController extends Controller
@@ -26,7 +28,7 @@ class DiseaseController extends Controller
     public function search(Request $request)
     {
       if(Auth::user()->role === "Admin"){
-        return DiseaseResource::collection(DiseaseModel::where('disease_name', 'like', '%'.$request->input.'%')->get());
+        return DiseaseResource::collection(DiseaseModel::where('disease_name', 'like', '%'.$request->input.'%')->where('archive', $request->archives)->get());
       }
     }
 
@@ -86,7 +88,14 @@ class DiseaseController extends Controller
           'description' => $request->description,
         ]);
 
-        if($add){
+        $risk = Risk::create([
+          'low_risk' => $request->lowRisk,
+          'severe_risk' => $request->severeRisk,
+          'high_risk' => $request->highRisk,
+          'disease_id' => $add->id,
+        ]);
+
+        if($add && $risk){
           return response()->json([
             'status_code' => '200',
             'message' => 'Disease successfully added',
@@ -137,15 +146,17 @@ class DiseaseController extends Controller
      */
     public function show()
     {
-      if(Auth::check()){
-        if(Auth::user()->role === "Admin"){
-          return DiseaseResource::collection(DiseaseModel::all());
-        }else{
-          return DiseaseResource::collection(DiseaseModel::where('archive','==', false)->get());
-        }
-      }else{
-        return DiseaseResource::collection(DiseaseModel::where('archive','==', false)->get());
-      }
+      //return RiskResource::collection(Risk::all());
+      return DiseaseResource::collection(DiseaseModel::with('risk')->get());
+      // if(Auth::check()){
+      //   if(Auth::user()->role === "Admin"){
+      //     return DiseaseResource::collection(DiseaseModel::all()->with('risk'));
+      //   }else{
+      //     return DiseaseResource::collection(DiseaseModel::where('archive','==', false)->get());
+      //   }
+      // }else{
+      //   return DiseaseResource::collection(DiseaseModel::where('archive','==', false)->get());
+      // }
     }
 
     public function allDisease(){
@@ -167,7 +178,7 @@ class DiseaseController extends Controller
         if($current->save()){
           $change = DiseaseModel::find($request->id);
           $change->homepage = true;
-  
+
           if($change->save()){
             return response()->json([
               'status_code' => '200',
@@ -207,7 +218,15 @@ class DiseaseController extends Controller
         $disease->disease_name = $request->name;
         $disease->description = $request->description;
 
+        
+
         if($disease->save()){
+          $risk = Risk::find($request->risk_id);
+          $risk->low_risk = $request->lowRisk;
+          $risk->severe_risk = $request->severeRisk;
+          $risk->high_risk = $request->highRisk;
+          $risk->save();
+
           return response()->json([
             'status_code' => '200',
             'message' => 'Disease successfully updated',

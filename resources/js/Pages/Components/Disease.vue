@@ -37,6 +37,30 @@
                       <textarea :class="{'border-red-700':validations.addDescErr}" v-model="addForm.description" class="border mt-1 w-full py-2 px-3 text-grey-darkest resize-x-none" type="text" placeholder="Disease description" maxlength="500" rows="4"></textarea>
                       <p v-if="validations.addDescErr" class="mt-1 ml-1 text-sm text-red-700">{{ validations.addDescMsg }}</p>
                     </div>
+                    <div class="block col-span-8 sm:col-span-6 md:flex">
+                      <div class="w-full">
+                        <jet-label for="first_name" value="Risk Percentage"/>
+                      </div>
+                    </div>
+                    <div class="block col-span-8 sm:col-span-6 md:flex">
+                      <div class="w-full">
+                        <jet-label for="low_risk" value="Low Risk"/>
+                        <input :class="{'border-red-700' : validations.addLowRisk}" class="mt-1 w-full border py-2 px-3 text-grey-darkest" type="number" v-model="addForm.lowRisk" max="100" min="1">
+                      </div>
+                      <div class="w-full">
+                        <jet-label for="severe" value="Severe"/>
+                        <input :class="{'border-red-700' : validations.addSevereRisk}" class="mt-1 w-full border py-2 px-3 text-grey-darkest" type="number" v-model="addForm.severeRisk" max="100" min="1">
+                      </div>
+                      <div class="w-full">
+                        <jet-label for="high_risk" value="High Risk"/>
+                        <input :class="{'border-red-700' : validations.addHighRisk}" class="mt-1 w-full border py-2 px-3 text-grey-darkest" type="number" v-model="addForm.highRisk" max="100" min="1">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="block col-span-8 sm:col-span-6 md:flex">
+                    <div class="w-full">
+                      <p v-if="validations.risk" class="w-full mt-1 ml-1 text-sm text-red-700">{{ validations.riskMsg }}</p>
+                    </div>
                   </div>
                 </div>
                 <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6 shadow rounded">
@@ -53,7 +77,12 @@
       <div class="mt-7 p-5 w-full max-w-4xl bg-white rounded shadow-md">
         <h1 class="font-extrabold text-sm md:text-base md:text-2xl uppercase mb-5">Disease List</h1>
         <form class="flex" v-on:submit.prevent="submitSearch">
-          <input class="px-3 py-2" type="text" v-model="searchInput" placeholder="Disease name"/>
+          <input :sync="true" class="px-3 py-2" type="text" v-model="searchInput" placeholder="Disease name"/>
+          <select class="px-3 py-2" v-model="searchInputArchive">
+            <option value="" selected>All</option>
+            <option :value="true">Archives</option>
+            <option :value="false">Not Archive</option>
+          </select>
           <button class="px-3 py-2 border border-blue-500 hover:border-blue-700 text-blue-500 hover:text-blue-700 cursor-pointer">Search</button>
         </form>
         <div class="w-full mt-5 overflow-x-auto overflow-y-auto z-0" style="max-height:700px;">
@@ -117,9 +146,24 @@
                   <div class="flex flex-col mb-4 mt-5">
                     <textarea :class="{'border-red-700': editValidations.editDescErr}" v-model="editDiseaseForm.description" class="border py-2 px-3 text-grey-darkest resize-x-none" placeholder="Disease description" type="text" name="content" id="content" rows="11" maxlength="1500"></textarea>
                     <p v-if="editValidations.editDescErr" class="mt-1 ml-1 text-sm text-red-700">{{ editValidations.editDescMsg }}</p>
+                  </div>
+                  <div class="block col-span-8 sm:col-span-6 md:flex">
+                    <div class="w-full">
+                      <jet-label for="low_risk" value="Low Risk"/>
+                      <input :class="{'border-red-700': editValidations.editRisk}" class="mt-1 w-full border py-2 px-3 text-grey-darkest" type="number" v-model="editDiseaseForm.lowRisk" max="100" min="1">
                     </div>
+                    <div class="w-full">
+                      <jet-label for="severe" value="Severe"/>
+                      <input :class="{'border-red-700': editValidations.editRisk}" class="mt-1 w-full border py-2 px-3 text-grey-darkest" type="number" v-model="editDiseaseForm.severeRisk" max="100" min="1">
+                    </div>
+                    <div class="w-full">
+                      <jet-label for="high_risk" value="High Risk"/>
+                      <input :class="{'border-red-700': editValidations.editRisk}" class="mt-1 w-full border py-2 px-3 text-grey-darkest" type="number" v-model="editDiseaseForm.highRisk" max="100" min="1">
+                    </div>
+                  </div>
+                  <p v-if="editValidations.editRisk" class="mt-1 ml-1 text-sm text-red-700">{{ editValidations.editRiskMsg }}</p>
                 </div>
-                <div class="w-full flex justify-end">
+                <div class="w-full mt-7 flex justify-end">
                   <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" :disabled="editValidations.editBtn">
                     {{ editValidations.editBtn ? "Loading...":"Update" }}
                   </button>&nbsp;&nbsp;
@@ -205,6 +249,7 @@
   import UserLayout from '@/Layouts/UserLayout';
   import JetLabel from '@/Jetstream/Label'
   import JetActionMessage from '@/Jetstream/ActionMessage'
+  import ArchiveSvg from '../../../images/archive.svg';
 
   export default {
     components: {
@@ -214,7 +259,9 @@
     },
     data(){
       return {
+        ArchiveSvg: ArchiveSvg,
         searchInput: '',
+        searchInputArchive: '',
         maxDate: "",
         changeShowID: '',
         modalShownOpen: false,
@@ -230,10 +277,18 @@
           addDescMsg: '',
           addDiseaseMsg: false,
           addDiseaseMessage: '',
+          addLowRisk : false,
+          addSevereRisk: false,
+          addHighRisk: false,
+          risk: false,
+          riskMsg: '',
         },
         addForm: {
           name: '',
           description: '',
+          lowRisk: '1',
+          severeRisk: '1',
+          highRisk: '1',
         },
         editValidations: {
           id: '',
@@ -242,10 +297,17 @@
           editNameMsg: '',
           editDescErr: false,
           editDescMsg: '',
+          editRisk: false,
+          editRiskMsg: '',
         },
         editDiseaseForm:{
+          id: '',
           name: '',
           description: '',
+          lowRisk: '',
+          severeRisk: '',
+          highRisk: '',
+          risk_id: '',
         },
         delDiseaseForm:{
           name: '',
@@ -266,6 +328,9 @@
       var month = '' + (d.getMonth() + 1);
       var day = '' + d.getDate();
       var year = d.getFullYear();
+      this.addForm.lowRisk = 1;
+      this.addForm.severeRisk = 2;
+      this.addForm.highRisk = 3;
 
       if (month.length < 2) 
         month = '0' + month;
@@ -275,16 +340,17 @@
     },
     methods: {
       submitSearch: function(){
-        if(this.searchInput === ""){
+        if(this.searchInput === "" && this.searchInputArchive === ""){
           this.allDisease();
         }else{
-          axios.post('api/disease_search', { input:  this.searchInput}).then(response => {
+          axios.post('api/disease_search', { input:  this.searchInput, archives: this.searchInputArchive }).then(response => {
             this.diseases = response.data.data;
           })
         }
       },
       allDisease: function(){
         axios.get('api/disease-names').then(response => {
+          console.log(response.data.data);
           this.diseases = response.data.data;
         })
       },
@@ -342,7 +408,20 @@
           this.editValidations.editDescMsg = "";
         }
 
-        if(this.editValidations.editDescErr === false && this.editValidations.editNameErr === false){
+        if(this.editDiseaseForm.severeRisk <= this.editDiseaseForm.lowRisk){
+          this.editValidations.editRisk = true;
+          this.editValidations.editRiskMsg = "Severe must be higher than Low Risk.";
+        }else{
+          if(this.editDiseaseForm.highRisk <= this.editDiseaseForm.severeRisk){
+            this.editValidations.editRisk = true;
+            this.editValidations.editRiskMsg = "High risk must be higher than severe.";
+          }else{
+            this.editValidations.editRisk = false;
+            this.editValidations.editRiskMsg = "";
+          }
+        }
+
+        if(this.editValidations.editRisk === false && this.editValidations.editDescErr === false && this.editValidations.editNameErr === false){
           axios.post('api/disease_update', this.editDiseaseForm).then(response => {
             console.log(response.data);
             if(response.data.status_code === "200"){
@@ -364,6 +443,10 @@
         this.editDiseaseForm.id = disease.id;
         this.editDiseaseForm.name = disease.disease_name;
         this.editDiseaseForm.description = disease.description;
+        this.editDiseaseForm.lowRisk = disease.risk.low_risk;
+        this.editDiseaseForm.severeRisk = disease.risk.severe_risk;
+        this.editDiseaseForm.highRisk = disease.risk.high_risk;
+        this.editDiseaseForm.risk_id = disease.risk.id;
         this.modalEditDiseaseOpen = true;
       },
       addSubmitForm: function(event){
@@ -385,7 +468,21 @@
           this.validations.addDescMsg = "";
         }
 
-        if(this.validations.addNameErr === false && this.validations.addDescErr === false){
+
+        if(this.addForm.severeRisk <= this.addForm.lowRisk){
+          this.validations.risk = true;
+          this.validations.riskMsg = "Severe must be higher than Low Risk.";
+        }else{
+          if(this.addForm.highRisk <= this.addForm.severeRisk){
+            this.validations.risk = true;
+            this.validations.riskMsg = "High risk must be higher than severe.";
+          }else{
+            this.validations.risk = false;
+            this.validations.riskMsg = "";
+          }
+        }
+
+        if(this.validations.risk === false && this.validations.addNameErr === false && this.validations.addDescErr === false){
           axios.post('api/add_disease', this.addForm).then(response => {
             this.addForm = {
               name: '',

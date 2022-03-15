@@ -24,5 +24,8 @@
     </head>
     <body class="font-sans antialiased bg-gray-100 mx-auto">
         @inertia
+    <script>
+        const case_min_year = {{ \App\Models\CasesModel::minYear() }};
+    </script>
     </body>
 </html>

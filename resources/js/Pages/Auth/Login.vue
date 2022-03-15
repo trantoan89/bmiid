@@ -65,7 +65,7 @@
     created(){
       document.title = "BMIID(Login)";
 
-      this.index();
+      // this.index();
     },
     methods: {
       submit: function(){
@@ -89,10 +89,10 @@
 
         if(this.validation.usernameErr === false && this.validation.passwordErr === false){
           axios.get('/sanctum/csrf-cookie').then(response => {
-            window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-            window.axios.defaults.withCredentials = true;
+            // window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+            // window.axios.defaults.withCredentials = true;
 
-            axios.post('/api/auth', this.form ).then((response) => {
+            axios.post('/login', this.form ).then((response) => {
               if(response.data.status_code === "2"){
                 this.validation.submit = false;
                 this.validation.messageError = response.data.message;

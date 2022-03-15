@@ -22,4 +22,9 @@ class DiseaseModel extends Model
     {
         return $this->hasMany(CasesModel::class, 'disease_id');
     }
+
+    public function risk()
+    {
+        return $this->hasOne(Risk::class, 'disease_id');
+    }
 }

@@ -368,7 +368,7 @@
 <style scoped>
   @import '../../../css/navbar.css';
 </style>
-<script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+
 <script>
   import UserLayout from '@/Layouts/UserLayout';
   import JetLabel from '@/Jetstream/Label'

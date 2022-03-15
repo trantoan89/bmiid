@@ -81,7 +81,7 @@
       <div class="mt-7 p-5 w-full max-w-4xl bg-white rounded shadow-md">
         <h1 class="font-extrabold text-sm md:text-base md:text-2xl uppercase mb-5">Account List</h1>
         <form class="flex" v-on:submit.prevent="submitSearch">
-          <input class="px-3 py-2" type="text" v-model="searchInput" placeholder="Disease name"/>
+          <input class="px-3 py-2" type="text" v-model="searchInput" placeholder="User name"/>
           <button class="px-3 py-2 border border-blue-500 hover:border-blue-700 text-blue-500 hover:text-blue-700 cursor-pointer">Search</button>
         </form>
         <div class="w-full mt-5 overflow-x-auto overflow-y-auto z-0"  style="max-height:700px;">

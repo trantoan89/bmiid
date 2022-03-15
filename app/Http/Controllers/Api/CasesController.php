@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\CasesModel;
 use App\Models\DiseaseModel;
 use App\Models\BarangayModel;
+use App\Models\Risk;
 use Illuminate\Support\Facades\Auth;
 
 class CasesController extends Controller
@@ -118,13 +119,29 @@ class CasesController extends Controller
         
         $computed = $active - ($deceased + $recovered);
 
+        $risk = Risk::where('disease_id', $request->disease_id)->first();
+
+        $computedLow = $b->population * ($risk->low_risk/100);
+        $computedSevere = $b->population * ($risk->severe_risk/100);
+        $computedHigh = $b->population * ($risk->high_risk/100);
+
+        // if($computed === 0){
+        //   $arr[$b->id] = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+        // }else if($computed > 0 && $computed < 10){
+        //   $arr[$b->id] = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+        // }else if($computed > 9 && $computed < 20){
+        //   $arr[$b->id] = 'http://maps.google.com/mapfiles/ms/icons/orange-dot.png';
+        // }else if($computed > 19){
+        //   $arr[$b->id] = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+        // }
+
         if($computed === 0){
           $arr[$b->id] = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
-        }else if($computed > 0 && $computed < 10){
+        }else if($computed > 0 && $computed < $computedLow){
           $arr[$b->id] = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
-        }else if($computed > 9 && $computed < 20){
+        }else if($computed > $computedLow && $computed < $computedHigh){
           $arr[$b->id] = 'http://maps.google.com/mapfiles/ms/icons/orange-dot.png';
-        }else if($computed > 19){
+        }else if($computed > $computedHigh){
           $arr[$b->id] = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
         }
       }

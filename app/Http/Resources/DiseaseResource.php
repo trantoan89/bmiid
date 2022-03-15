@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\RiskResource;
 
 class DiseaseResource extends JsonResource
 {
@@ -21,6 +22,7 @@ class DiseaseResource extends JsonResource
             'description' => $this->description,
             'homepage' => $this->homepage,
             'archive' => $this->archive,
+            'risk' => new RiskResource($this->risk),
         ];
     }
 }

@@ -80,7 +80,7 @@
                       </button> -->
                       <button class="p-1 w-full border border-red-500 rounded text-center relative deleteBtn" v-on:click="deleteModal(brngy)">
                         <i class="far fa-trash-alt text-sm md:text-base text-red-500"></i>
-                        <p class="absolute text-sm px-2 top-5 -right-4 bg-white border border-black z-10 deleteText">Delete</p>
+                        <!-- <p class="absolute text-sm px-2 top-5 -right-4 bg-white border border-black z-10 deleteText">Delete</p> -->
                       </button>
                     </div>
                   </td>
@@ -184,7 +184,7 @@
 <style scoped>
   @import '../../../css/navbar.css';
 </style>
-<script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+
 <script>
   import UserLayout from '@/Layouts/UserLayout';
   import exampleImage from '../../../images/example_map.png';

@@ -2,8 +2,9 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
 use Inertia\Inertia;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\CasesPDFController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,8 @@ Route::get('/', function () {
     ]);
 });
 
+Route::post('/login', [LoginController::class, 'authenticate']);
+
 Route::inertia('/about', 'About');
 Route::inertia('/contact', 'Contact');
 Route::inertia('/map', 'Map');
@@ -39,8 +42,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function (){
     Route::inertia('/disease', 'Components/Disease')->middleware('admin');
     Route::inertia('/case', 'Components/Case');
     Route::inertia('/accounts', 'Components/Users')->middleware('admin');
+    
+    Route::get('/casesview', [CasesPDFController::class, 'getPDF']);
 });
 
-// Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->name('dashboard');

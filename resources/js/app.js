@@ -3,6 +3,7 @@ require('./bootstrap');
 // Import modules...
 import Vue from 'vue';
 import { App as InertiaApp, plugin as InertiaPlugin } from '@inertiajs/inertia-vue';
+import { createInertiaApp, Link } from '@inertiajs/inertia-vue';
 import PortalVue from 'portal-vue';
 import * as VueGoogleMaps from 'vue2-google-maps';
 import '@fortawesome/fontawesome-free/css/all.css'
@@ -18,6 +19,7 @@ Vue.use(ToggleButton);
 Vue.use(require('vue-moment'));
 Vue.mixin({ methods: { route } });
 Vue.use(InertiaPlugin);
+Vue.component("inertia-link", Link);
 Vue.use(PortalVue);
 Vue.use(VueGoogleMaps, {
     load: {

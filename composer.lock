@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec43bb9e665b14d5b43dbb80a2d045aa",
+    "content-hash": "3875ff3ff7ee69a4050195f1f22b54ef",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -172,6 +172,72 @@
             "time": "2021-01-20T22:51:39+00:00"
         },
         {
+            "name": "codedge/laravel-fpdf",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codedge/laravel-fpdf.git",
+                "reference": "f41f033f6de558e9719d71b38c9cb7f3f9c5c064"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codedge/laravel-fpdf/zipball/f41f033f6de558e9719d71b38c9cb7f3f9c5c064",
+                "reference": "f41f033f6de558e9719d71b38c9cb7f3f9c5c064",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^7.0 || ^8.0 || ^9.0",
+                "php": "^7.4 || ^8.0 || ^8.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.24.1",
+                "phpunit/phpunit": "^9.5.13"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Fpdf": "Codedge\\Fpdf\\Facades\\Fpdf"
+                    },
+                    "providers": [
+                        "Codedge\\Fpdf\\FpdfServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Codedge\\Fpdf\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Holger Lösken",
+                    "email": "holger.loesken@codedge.de"
+                }
+            ],
+            "description": "Laravel package to include Fpdf. It ships with Fpdf 1.84.",
+            "keywords": [
+                "fpdf",
+                "laravel",
+                "pdf"
+            ],
+            "support": {
+                "issues": "https://github.com/codedge/laravel-fpdf/issues",
+                "source": "https://github.com/codedge/laravel-fpdf"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/codedge",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-02-17T12:12:20+00:00"
+        },
+        {
             "name": "dasprid/enum",
             "version": "1.0.3",
             "source": {
@@ -217,6 +283,45 @@
                 "source": "https://github.com/DASPRiD/Enum/tree/1.0.3"
             },
             "time": "2020-10-02T16:03:48+00:00"
+        },
+        {
+            "name": "davefx/phplot",
+            "version": "6.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/davefx/PHPlot.git",
+                "reference": "d2e201ecaabb0428116c89cebe281a8f54096450"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/davefx/PHPlot/zipball/d2e201ecaabb0428116c89cebe281a8f54096450",
+                "reference": "d2e201ecaabb0428116c89cebe281a8f54096450",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "phplot/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "description": "PHPlot - Create charts in PHP",
+            "homepage": "http://phplot.sourceforge.net",
+            "keywords": [
+                "chart",
+                "phplot"
+            ],
+            "support": {
+                "issues": "https://github.com/davefx/PHPlot/issues",
+                "source": "https://github.com/davefx/PHPlot/tree/master"
+            },
+            "time": "2016-10-19T07:14:15+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -8289,5 +8394,5 @@
         "php": "^7.3|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.2.0"
 }

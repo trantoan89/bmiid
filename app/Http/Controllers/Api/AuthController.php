@@ -10,36 +10,45 @@ use App\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Http\Controllers\Api\Session;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-      if(Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
-        if(Auth::user()->archive){
-          Auth::logout();
+        $credentials = $request->validate([
+            'username' => ['required'],
+            'password' => ['required'],
+        ]);
+        
+        if(Auth::attempt($credentials)) {
 
-          return response()->json([
-            'status_code' => '2',
-            'message' => 'Your account has been disabled.',
-            //'token' => $token,
-          ]);
-        }else{
-          $user = Auth::user();
+            if(Auth::user()->archive) {
+                Auth::logout();
+                return response()->json([
+                    'status_code' => '2',
+                    'message' => 'Your account has been disabled.',
+                    //'token' => $token,
+                ]);
+            }
+            else {
+Log::info('login ok', ['sessions' => DB::select('select * from sessions')]);
+                // $user = Auth::user();
 
-          //$token = $request->user()->createToken('authToken')->plainTextToken;
-          // if($user->role == "Admin"){
-          //   $token = $request->user()->createToken('authToken')->plainTextToken;
-          // }else{
-          //   $token = $request->user()->createToken('authToken')->plainTextToken;
-          // }
-          
-          return response()->json([
-            'status_code' => '0',
-            'message' => 'Correct',
-            //'token' => $token,
-          ]);
-        }
+                //$token = $request->user()->createToken('authToken')->plainTextToken;
+                // if($user->role == "Admin"){
+                //   $token = $request->user()->createToken('authToken')->plainTextToken;
+                // }else{
+                //   $token = $request->user()->createToken('authToken')->plainTextToken;
+                // }
+
+                return response()->json([
+                    'status_code' => '0',
+                    'message' => 'Correct',
+                    //'token' => $token,
+                ]);
+            }
         
       }else{
         return response()->json([
