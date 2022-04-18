@@ -46,3 +46,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function (){
     Route::get('/casesview', [CasesPDFController::class, 'getPDF']);
 });
 
+//Route::get('/hash/{p}', function ($p) {
+//    return \Illuminate\Support\Facades\Hash::make($p);
+//});
+
