@@ -13,4 +13,5 @@ npm-debug.log
 yarn-error.log
 /C\:\\xampp\\htdocs\\BMIID\\storage\\logs/
 /public/test.php
-
+error_log
+/public/error_log
