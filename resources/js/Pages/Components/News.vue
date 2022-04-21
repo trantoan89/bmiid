@@ -38,10 +38,10 @@
       <div class="mt-16 p-5 w-full max-w-4xl bg-white rounded shadow-md">
         <h1 class="font-extrabold text-sm md:text-base md:text-2xl uppercase mb-5">Added News</h1>
         <div class="flex">
-          <div class="flex items-center border rounded p-2 mb-3 w-28 mr-3 cursor-pointer">
+          <!-- <div class="flex items-center border rounded p-2 mb-3 w-28 mr-3 cursor-pointer">
             <input type="checkbox" id="checkbox-example" class="h-4 w-4 text-gray-700 border rounded mr-2 cursor-pointer" v-on:click="selectAll" v-model="allSelected">
             <label for="checkbox-example" class="cursor-pointer">Select all</label>
-          </div>
+          </div> -->
           <form v-on:submit.prevent="submitDeleteForm">
             <button v-if="newsIds.length > 0" v-on:click="newsDelete(newsIds, 'many')" class="flex items-center border border-red-700 text-red-700 hover:border-red-500 hover:text-red-500 rounded p-2 mb-3 w-28">
               <label class="cursor-pointer"><i class="far fa-trash-alt text-base"></i> Delete</label>
