@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\DiseaseResource;
 use App\Http\Resources\CasesCountResource;
 use App\Http\Resources\RiskResource;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\DiseaseModel;
 use App\Models\CasesModel;
@@ -27,9 +28,21 @@ class DiseaseController extends Controller
 
     public function search(Request $request)
     {
-      if(Auth::user()->role === "Admin"){
-        return DiseaseResource::collection(DiseaseModel::where('disease_name', 'like', '%'.$request->input.'%')->where('archive', $request->archives)->get());
-      }
+        if(Auth::user()->role === "Admin"){
+            $input = $request->input;
+            $archives = $request->archives;
+            
+            $q = DiseaseModel::where('disease_name', 'like', 
+                                     "%". $input ."%");
+            
+            if ($archives !== null && $archives !== '') {
+                $q->where('archive', $archives);
+            }
+            
+            $q = $q->get();
+            
+            return DiseaseResource::collection($q);
+        }
     }
 
     public function countCases()

@@ -343,14 +343,17 @@
         if(this.searchInput === "" && this.searchInputArchive === ""){
           this.allDisease();
         }else{
-          axios.post('api/disease_search', { input:  this.searchInput, archives: this.searchInputArchive }).then(response => {
+          axios.post('api/disease_search', {
+            input: this.searchInput, 
+            archives: this.searchInputArchive 
+          }).then(response => {
             this.diseases = response.data.data;
           })
         }
       },
       allDisease: function(){
         axios.get('api/disease-names').then(response => {
-          console.log(response.data.data);
+          // console.log(response.data.data);
           this.diseases = response.data.data;
         })
       },
@@ -423,7 +426,7 @@
 
         if(this.editValidations.editRisk === false && this.editValidations.editDescErr === false && this.editValidations.editNameErr === false){
           axios.post('api/disease_update', this.editDiseaseForm).then(response => {
-            console.log(response.data);
+            // console.log(response.data);
             if(response.data.status_code === "200"){
               this.$refs.updated[this.editDiseaseForm.id - 1].innerText = "updated";
               this.allDisease();
