@@ -24,7 +24,7 @@ class ContactController extends Controller
             'message' => 'required|max:500',
         ]);
         
-        Mail::to('trantoan060689@gmail.com')->send(new FeedBack($validated));
+        Mail::to(env('MAIL_FEEDBACK'))->send(new FeedBack($validated));
         
         return redirect()->back()->with('screen_msg', 'Message is sent');
     }
