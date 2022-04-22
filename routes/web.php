@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CasesPDFController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,8 @@ Route::inertia('/about', 'About');
 Route::inertia('/contact', 'Contact');
 Route::inertia('/map', 'Map');
 Route::inertia('/forgot-password', 'Auth/ForgotPassword');
+
+Route::get('/contact/send', [ContactController::class, 'send']);
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function (){
     Route::get('/dashboard', function () {

@@ -26,6 +26,10 @@
         @inertia
     <script>
         const case_min_year = {{ \App\Models\CasesModel::minYear() }};
+        
+        @if (session('screen_msg'))
+            alert('{{ session('screen_msg') }}');
+        @endif
     </script>
     </body>
 </html>

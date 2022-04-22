@@ -27,20 +27,20 @@
               <p class="text-base text-red-500 p-2">*All fields in contact form is required.</p>
             </div>
             <div class="w-4/5 px-7 md:w-1/3 order-last md:order-first">
-              <form class="w-full">
+              <form class="w-full" action="contact/send">
                 <div class="flex flex-col mb-4">
                   <label class="mb-2 text-base" for="email">Email</label>
-                  <input class="border py-2 px-3 text-grey-darkest" type="email" name="email" id="email" maxlength="50">
+                  <input class="border py-2 px-3 text-grey-darkest" type="email" name="email" id="email" maxlength="50" required>
                   <!-- <p class="text-sm text-red-700">Provide an email</p> -->
                 </div>
                 <div class="flex flex-col mb-4">
                   <label class="mb-2 text-base" for="name">Name</label>
-                  <input class="border py-2 px-3 text-grey-darkest " type="text" name="name" id="name" maxlength="50">
+                  <input class="border py-2 px-3 text-grey-darkest " type="text" name="name" id="name" maxlength="50" required>
                   <!-- <p class="text-sm text-red-700">Provide a name</p> -->
                 </div>
                 <div class="flex flex-col mb-4">
                   <label class="mb-2 text-base" for="name">Message</label>
-                  <textarea class="border py-2 px-3 text-grey-darkest resize-none" type="text" name="message" id="message" rows="8" maxlength="500"></textarea>
+                  <textarea class="border py-2 px-3 text-grey-darkest resize-none" type="text" name="message" id="message" rows="8" maxlength="500" required></textarea>
                   <!-- <p class="text-sm text-red-700">Provide a message</p> -->
                 </div>
                 <div class="flex flex-col">
