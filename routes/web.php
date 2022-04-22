@@ -34,7 +34,7 @@ Route::inertia('/contact', 'Contact');
 Route::inertia('/map', 'Map');
 Route::inertia('/forgot-password', 'Auth/ForgotPassword');
 
-Route::get('/contact/send', [ContactController::class, 'send']);
+Route::post('/contact/send', [ContactController::class, 'send']);
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function (){
     Route::get('/dashboard', function () {

@@ -27,7 +27,8 @@
               <p class="text-base text-red-500 p-2">*All fields in contact form is required.</p>
             </div>
             <div class="w-4/5 px-7 md:w-1/3 order-last md:order-first">
-              <form class="w-full" action="contact/send">
+              <form class="w-full" action="contact/send" method="POST">
+                <input type="hidden" name="_token" :value="csrf">
                 <div class="flex flex-col mb-4">
                   <label class="mb-2 text-base" for="email">Email</label>
                   <input class="border py-2 px-3 text-grey-darkest" type="email" name="email" id="email" maxlength="50" required>
@@ -80,6 +81,9 @@
     },
     created (){
       document.title = "BMIID(Contact)";
-    }
+    },
+    data: () => ({
+        csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+    }),
   }
 </script>
