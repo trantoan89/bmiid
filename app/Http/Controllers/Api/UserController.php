@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use App\Models\User;
+use App\Utils;
 
 class UserController extends Controller
 {
@@ -16,16 +17,32 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-		  return UserResource::collection(User::where('id','!=',Auth::user()->id)->get());
+		$rows = UserResource::collection(User::where('id','!=',Auth::user()->id)->get())->toArray($request);
+        
+        $perPage = 10;
+		$rows = Utils::manPaginate($rows, $perPage);
+
+        return response()->json([
+            $rows->items(),
+            $rows->links()->toHtml()
+        ]);
     }
 
     public function search(Request $request)
     {
-      if(Auth::user()->role === "Admin"){
-        return UserResource::collection(User::where('first_name', 'like', '%'.$request->input.'%')->orWhere('last_name', 'like', '%'.$request->input.'%')->orWhere('username', 'like', '%'.$request->input.'%')->get());
-      }
+        if(Auth::user()->role !== "Admin") return '';
+        
+        $rows = UserResource::collection(User::where('first_name', 'like', '%'.$request->input.'%')->orWhere('last_name', 'like', '%'.$request->input.'%')->orWhere('username', 'like', '%'.$request->input.'%')->get())->toArray($request);
+        
+        $perPage = 10;
+        $rows = Utils::manPaginate($rows, $perPage);
+        
+        return response()->json([
+            $rows->items(),
+            $rows->links()->toHtml()
+        ]);
     }
 
     /**

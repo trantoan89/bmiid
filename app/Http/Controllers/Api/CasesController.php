@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CasesResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use App\Models\CasesModel;
 use App\Models\DiseaseModel;
 use App\Models\BarangayModel;
 use App\Models\Risk;
-use Illuminate\Support\Facades\Auth;
+use App\Utils;
 
 class CasesController extends Controller
 {
@@ -18,73 +21,90 @@ class CasesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
       if(Auth::user()->role === "Admin"){
-        return CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'approved')->get());
+        $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'approved')->get())->toArray($request);
       }else{
-        return CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'approved')->where('created_by', Auth::user()->id)->get());
+        $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'approved')->where('created_by', Auth::user()->id)->get())->toArray($request);
       }
+        $perPage = 10;
+		$cases = Utils::manPaginate($cases, $perPage);
+
+        return response()->json([
+            $cases->items(),
+            $cases->links()->toHtml()
+        ]);
     }
 
-    public function pendingCase(){
+    public function pendingCase(Request $request){
       if(Auth::user()->role === "Admin"){
-        return CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'pending')->get());
+        $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'pending')->get())->toArray($request);
       }else{
-        return CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'pending')->where('created_by', Auth::user()->id)->get());
+        $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'pending')->where('created_by', Auth::user()->id)->get())->toArray($request);
       }
+        return response()->json([$cases]);
+        // $perPage = 10;
+		// $cases = Utils::manPaginate($cases, $perPage);
+
+        // return response()->json([
+            // $cases->items(),
+            // $cases->links()->toHtml()
+        // ]);
     }
 
-    public function declineCase(){
+    public function declineCase(Request $request){
       if(Auth::user()->role === "Admin"){
-        return CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'declined')->get());
+        $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'declined')->get())->toArray($request);
       }else{
-        return CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'declined')->where('created_by', Auth::user()->id)->get());
+        $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'declined')->where('created_by', Auth::user()->id)->get())->toArray($request);
       }
+        return response()->json([$cases]);
+        // $perPage = 10;
+		// $cases = Utils::manPaginate($cases, $perPage);
+
+        // return response()->json([
+            // $cases->items(),
+            // $cases->links()->toHtml()
+        // ]);
     }
 
     public function totalBarangayCase()
     {
-      $disease = DiseaseModel::all();
-      $barangay = BarangayModel::all();
-      $arr = [];
+        $cases = DB::select("SELECT barangay_name, disease_name, sum(active) as active, sum(deceased) as deceased, sum(recovered) as recovered FROM disease JOIN cases ON disease.id = cases.disease_id JOIN barangay ON barangay.id = cases.barangay_id WHERE status='approved' GROUP BY barangay_id, disease_id ORDER BY barangay_name");
 
-      foreach($barangay as $b){
-        foreach($disease as $d){
-          $active = CasesModel::where('barangay_id', $b->id)->where('disease_id', $d->id)->where('status', 'approved')->get()->sum('active');
-          $deceased = CasesModel::where('barangay_id', $b->id)->where('disease_id', $d->id)->where('status', 'approved')->get()->sum('deceased');
-          $recovered = CasesModel::where('barangay_id', $b->id)->where('disease_id', $d->id)->where('status', 'approved')->get()->sum('recovered');
-          $arr[] = array(
-            'barangay_name' => $b->barangay_name,
-            'disease_name' => $d->disease_name,
-            'active' => $active,
-            'deceased' => $deceased,
-            'recovered' => $recovered,
-          );
+        foreach($cases as $d) {
+            $d->active = (int)$d->active;
+            $d->deceased  = (int)$d->deceased;
+            $d->recovered = (int)$d->recovered;
         }
-      }
+		
+		$perPage = 10;
+		$cases = Utils::manPaginate($cases, $perPage);
 
-      return response()->json([$arr]);
+        return response()->json([
+            $cases->items(),
+            $cases->links()->toHtml()
+        ]);
     }
 
     public function totalDiseaseCase()
     {
-      $disease = DiseaseModel::all();
-      $arr = [];
+        $cases = DB::select("SELECT disease_name, sum(active) as active, sum(deceased) as deceased, sum(recovered) as recovered FROM disease JOIN cases ON disease.id = cases.disease_id WHERE status='approved' GROUP BY disease_id");
 
-      foreach($disease as $d){
-        $active = CasesModel::where('disease_id', $d->id)->where('status', 'approved')->get()->sum('active');
-        $deceased = CasesModel::where('disease_id', $d->id)->where('status', 'approved')->get()->sum('deceased');
-        $recovered = CasesModel::where('disease_id', $d->id)->where('status', 'approved')->get()->sum('recovered');
-        $arr[] = array(
-          'disease_name' => $d->disease_name,
-          'active' => $active,
-          'deceased' => $deceased,
-          'recovered' => $recovered,
-        );
-      }
+        foreach($cases as $d) {
+            $d->active = (int)$d->active;
+            $d->deceased  = (int)$d->deceased;
+            $d->recovered = (int)$d->recovered;
+        }
+        
+		$perPage = 10;
+		$cases = Utils::manPaginate($cases, $perPage);
 
-      return response()->json([$arr]);
+        return response()->json([
+            $cases->items(),
+            $cases->links()->toHtml()
+        ]);
     }
 
     public function mapSearch(Request $request)

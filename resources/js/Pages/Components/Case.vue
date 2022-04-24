@@ -163,14 +163,15 @@
                           </template>
                         </tbody>
                       </table>
+                      <div id="Cases_pg" v-html="cases_plink"></div>
                     </div>
                     <p v-if="cases.length < 1" class="text-base text-center mt-1"><i>No Cases added.</i></p>
                   </div>
-                  <div v-bind:class="{'hidden': openTab !== 2, 'block': openTab === 2}">
+                  <div id="Barangay" v-bind:class="{'hidden': openTab !== 2, 'block': openTab === 2}">
                     <div class="w-full overflow-x-auto overflow-y-auto z-0" style="max-height:700px;">
                       <table class="w-full">
                         <thead>
-                          <th class="border">Date and Barangay</th>
+                          <th class="border">Barangay</th>
                           <th class="border">Disease</th>
                           <th class="border">Active</th>
                           <th class="border">Deceased</th>
@@ -202,6 +203,7 @@
                           </template>
                         </tbody>
                       </table>
+                      <div id="Barangay_pg" v-html="totalBarangay_plink"></div>
                     </div>
                   </div>
                   <div v-bind:class="{'hidden': openTab !== 3, 'block': openTab === 3}">
@@ -236,6 +238,7 @@
                           </template>
                         </tbody>
                       </table>
+                      <div id="Disease_pg" v-html="totalDisease_plink"></div>
                     </div>
                   </div>
                   <div v-bind:class="{'hidden': openTab !== 4, 'block': openTab === 4}">
@@ -385,13 +388,16 @@
         declinedCases: [],
         pendingCases: [],
         totalDisease: [],
+        totalDisease_plink: '',
         totalBarangay: [],
+        totalBarangay_plink: '',
         modalDeleteOpen: false,
         caseDeleteID: '',
         openTab: 1,
         barangays: [],
         diseases: [],
         cases: [],
+        cases_plink: '',
         maxDate: "",
         addForm: {
           date: '',
@@ -442,7 +448,7 @@
     methods: {
       declineCase: function(){
         axios.get('api/decline_case').then(response => {
-          this.declinedCases = response.data.data;
+          this.declinedCases = response.data[0];
         })
       },
       approvePending: function(cases){
@@ -469,19 +475,15 @@
       },
       pendingCase: function(){
         axios.get('api/pending_case').then(response => {
-          this.pendingCases = response.data.data;
+          this.pendingCases = response.data[0];
         })
       },
-      totalBarangayCase: function(){
-        axios.get('api/total_barangay_case').then(response => {
-          this.totalBarangay = response.data[0];
-        })
-      },
-      totalDiseaseCase: function(){
-        axios.get('api/total_disease_case').then(response => {
-          this.totalDisease = response.data[0];
-        })
-      },
+        totalBarangayCase: function() {
+            getPaginatedData(this, 'totalBarangay', 'totalBarangay_plink', 'Barangay_pg', 'api/total_barangay_case');
+        },
+        totalDiseaseCase: function() {
+            getPaginatedData(this, 'totalDisease', 'totalDisease_plink', 'Disease_pg', 'api/total_disease_case');
+        },
       toggleTabs: function(tabNumber){
         this.openTab = tabNumber
       },
@@ -589,10 +591,8 @@
           this.barangays = response.data.data;
         })
       },
-      allCase: function(){
-        axios.get('api/all_case').then(response => {
-          this.cases = response.data.data;
-        })
+      allCase: function() {
+          getPaginatedData(this, 'cases', 'cases_plink', 'Cases_pg', 'api/all_case');
       }
     }
   }

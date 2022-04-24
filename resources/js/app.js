@@ -27,6 +27,30 @@ Vue.use(VueGoogleMaps, {
     }
 })
 
+window.getPaginatedData = function (vue_com, prop, pg_link, pg_id, url, http_method='get', data={}) {
+    const config = {
+        method: http_method.toLowerCase(),
+        url: url,
+        data: data
+    }
+    axios(config).then(response => {
+        vue_com[prop] = response.data[0];
+        vue_com[pg_link] = response.data[1];
+        
+        vue_com.$nextTick(function () {
+            var list_a = document.getElementById(pg_id).getElementsByTagName('A');
+
+            for (let a of list_a) {
+                let href = a.href;
+                a.onclick = function() {
+                    getPaginatedData(vue_com, prop, pg_link, pg_id, href, http_method, data);
+                };
+                a.removeAttribute("href");
+            }
+        });
+    })
+}
+
 const app = document.getElementById('app');
 
 new Vue({

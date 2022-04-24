@@ -127,6 +127,7 @@
               </template>
             </tbody>
           </table>
+          <div id="Users_pg" v-html="users_plink"></div>
         </div>
         <p v-if="allUsers.length < 1" class="text-base text-center mt-1"><i>No Account added.</i></p>
       </div>
@@ -202,6 +203,7 @@
         modalDeleteOpen: false,
         modalArchiveOpen: false,
         allUsers: [],
+        users_plink: '',
         deleteForm: {
           id: '',
           name: '',
@@ -257,9 +259,7 @@
         if(this.searchInput === ""){
           this.getAllUsers();
         }else{
-          axios.post('api/user_search', { input:  this.searchInput}).then(response => {
-            this.allUsers = response.data.data;
-          })
+          getPaginatedData(this, 'allUsers', 'users_plink', 'Users_pg', 'api/user_search', 'post', {input:  this.searchInput});
         }
       },
       submitDeleteForm: function(){
@@ -289,11 +289,9 @@
         };
         this.modalArchiveOpen = true;
       },
-      getAllUsers: function(){
-        axios.get('api/users').then(response => {
-          this.allUsers = response.data.data;
-        })
-      },
+        getAllUsers: function(){
+            getPaginatedData(this, 'allUsers', 'users_plink', 'Users_pg', 'api/users');
+        },
       addSubmitForm: function(){
         this.addValidations.addBtn = true;
         //username validation
