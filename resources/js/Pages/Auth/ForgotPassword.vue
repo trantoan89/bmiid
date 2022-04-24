@@ -4,15 +4,15 @@
             Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to create a new one.
         </div>
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+        <!-- <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
-        </div>
+        </div> -->
 
-        <div v-else-if="!status && submitted" class="mb-4 font-medium text-sm text-green-600">
+        <div v-if="sendMailOK()" class="mb-4 font-medium text-sm text-green-600">
             Check your email to reset your password.
         </div>
 
-        <jet-validation-errors class="mb-4" />
+        <jet-validation-errors class="mb-4" ref="jverr"/>
 
         <form @submit.prevent="submit">
             <div>
@@ -74,6 +74,13 @@
                 this.form.post(this.route('password.email'),{
                     onFinish: () => this.submitted = true
                 })
+            },
+            sendMailOK() {
+                var hasErrors = false;
+                if (this.$refs.hasOwnProperty('jverr')) {
+                    hasErrors = this.$refs.jverr.hasErrors;
+                }
+                return this.submitted && !hasErrors;
             }
         }
     }
