@@ -3,6 +3,8 @@
 namespace App;
 
 use DateTime;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
+
 
 class Utils
 {
@@ -37,4 +39,26 @@ class Utils
         
         return $aa;
     }
+	
+    /**
+     * Manually paginating.
+     *
+     * @param  Array   $rows      Array of objects
+     * @param  Number  $per_page  The number of rows per page
+     * @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public static function manPaginate($rows, $per_page) {
+        $request = request();
+        $total = count($rows);
+        $cur_page = $request->input("page") ?? 1;
+        $start_point = ($cur_page * $per_page) - $per_page;
+
+        $rows = array_slice($rows, $start_point, $per_page, true);
+
+        return new Paginator($rows, $total, $per_page, $cur_page, [
+            'path' => $request->url(),
+            'query' => $request->query(),
+        ]);
+    }
+
 }
