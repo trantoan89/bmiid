@@ -73,7 +73,7 @@ class CasesController extends Controller
 
     public function totalBarangayCase()
     {
-        $cases = DB::select("SELECT barangay_name, disease_name, sum(active) as active, sum(deceased) as deceased, sum(recovered) as recovered FROM disease JOIN cases ON disease.id = cases.disease_id JOIN barangay ON barangay.id = cases.barangay_id WHERE status='approved' GROUP BY barangay_id, disease_id ORDER BY barangay_name");
+        $cases = DB::select("SELECT barangay_name, disease_name, sum(active) as active, sum(deceased) as deceased, sum(recovered) as recovered FROM disease JOIN cases ON disease.id = cases.disease_id JOIN barangay ON barangay.id = cases.barangay_id WHERE status='approved' GROUP BY barangay_name, disease_name ORDER BY barangay_name");
 
         foreach($cases as $d) {
             $d->active = (int)$d->active;
@@ -92,7 +92,7 @@ class CasesController extends Controller
 
     public function totalDiseaseCase()
     {
-        $cases = DB::select("SELECT disease_name, sum(active) as active, sum(deceased) as deceased, sum(recovered) as recovered FROM disease JOIN cases ON disease.id = cases.disease_id WHERE status='approved' GROUP BY disease_id");
+        $cases = DB::select("SELECT disease_name, sum(active) as active, sum(deceased) as deceased, sum(recovered) as recovered FROM disease JOIN cases ON disease.id = cases.disease_id WHERE status='approved' GROUP BY disease_name");
 
         foreach($cases as $d) {
             $d->active = (int)$d->active;
