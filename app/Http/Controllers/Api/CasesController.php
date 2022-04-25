@@ -23,11 +23,11 @@ class CasesController extends Controller
      */
     public function index(Request $request)
     {
-      if(Auth::user()->role === "Admin"){
-        $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'approved')->get())->toArray($request);
-      }else{
-        $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'approved')->where('created_by', Auth::user()->id)->get())->toArray($request);
-      }
+        if(Auth::user()->role === "Admin"){
+            $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'approved')->get())->toArray($request);
+        }else{
+            $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'approved')->where('created_by', Auth::user()->id)->get())->toArray($request);
+        }
         $perPage = 10;
 		$cases = Utils::manPaginate($cases, $perPage);
 
@@ -38,35 +38,37 @@ class CasesController extends Controller
     }
 
     public function pendingCase(Request $request){
-      if(Auth::user()->role === "Admin"){
-        $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'pending')->get())->toArray($request);
-      }else{
-        $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'pending')->where('created_by', Auth::user()->id)->get())->toArray($request);
-      }
-        return response()->json([$cases]);
-        // $perPage = 10;
-		// $cases = Utils::manPaginate($cases, $perPage);
+        if(Auth::user()->role === "Admin"){
+            $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'pending')->get());
+        }else{
+            $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'pending')->where('created_by', Auth::user()->id)->get());
+        }
+        return $cases;
+        $cases = $cases->toArray($request);
+        $perPage = 10;
+		$cases = Utils::manPaginate($cases, $perPage);
 
-        // return response()->json([
-            // $cases->items(),
-            // $cases->links()->toHtml()
-        // ]);
+        return response()->json([
+            $cases->items(),
+            $cases->links()->toHtml()
+        ]);
     }
 
     public function declineCase(Request $request){
-      if(Auth::user()->role === "Admin"){
-        $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'declined')->get())->toArray($request);
-      }else{
-        $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'declined')->where('created_by', Auth::user()->id)->get())->toArray($request);
-      }
-        return response()->json([$cases]);
-        // $perPage = 10;
-		// $cases = Utils::manPaginate($cases, $perPage);
+        if(Auth::user()->role === "Admin"){
+            $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'declined')->get());
+        }else{
+            $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'declined')->where('created_by', Auth::user()->id)->get());
+        }
+        return $cases;
+        $cases = $cases->toArray($request);
+        $perPage = 10;
+		$cases = Utils::manPaginate($cases, $perPage);
 
-        // return response()->json([
-            // $cases->items(),
-            // $cases->links()->toHtml()
-        // ]);
+        return response()->json([
+            $cases->items(),
+            $cases->links()->toHtml()
+        ]);
     }
 
     public function totalBarangayCase()

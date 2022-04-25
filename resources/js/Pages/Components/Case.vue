@@ -342,7 +342,7 @@
           </div>
         </div>
       </div>
-      <transion name="fade">
+      <Transition name="fade">
         <!-- Delete Modal -->
         <div v-if="modalDeleteOpen" class="flex items-center justify-center fixed left-0 bottom-0 w-full h-full bg-gray-800 z-50 bg-opacity-80">
           <div class="bg-white rounded-lg w-1/2 relative">
@@ -363,7 +363,7 @@
           </div>
         </div>
         <!-- end of Delete Modal -->
-      </transion>
+      </Transition>
     </div>
   </user-layout>
 </template>
@@ -448,7 +448,7 @@
     methods: {
       declineCase: function(){
         axios.get('api/decline_case').then(response => {
-          this.declinedCases = response.data[0];
+          this.declinedCases = response.data.data;
         })
       },
       approvePending: function(cases){
@@ -475,7 +475,7 @@
       },
       pendingCase: function(){
         axios.get('api/pending_case').then(response => {
-          this.pendingCases = response.data[0];
+          this.pendingCases = response.data.data;
         })
       },
         totalBarangayCase: function() {
