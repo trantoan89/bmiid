@@ -1,5 +1,5 @@
 <template>
-  <user-layout :pending-cases="pendingCases.length">
+  <user-layout ref="userLayout" :pending-cases="pendingCases.length">
     <template #header>
       <h2>
         Baguio Disease Cases
@@ -142,6 +142,7 @@
                               <td class="p-3 text-sm text-green-500 w-52 border">
                                 <p v-if="$page.props.user.role == 'Admin'" class="w-52 text-sm p-0 m-0"><i>Created by: {{ caseArr.createdBy.first_name }} {{ caseArr.createdBy.last_name }}</i></p>
                                 <p class="w-52 text-sm p-0 m-0"><i>Approved by: {{ caseArr.approvedBy.first_name }} {{ caseArr.approvedBy.last_name }}</i></p>
+                                <p v-if="caseArr.reason" class="w-52 text-sm p-0 m-0"><i>Reason: {{ caseArr.reason }}</i></p>
                               </td>
                               <td class="p-3 w-52 border">
                                 <p class="w-52 text-sm p-0 m-0 uppercase">{{ caseArr.dicease.disease_name }}</p>
@@ -316,6 +317,7 @@
                               <td class="p-3 text-sm text-red-500 w-52 border">
                                 <p v-if="$page.props.user.role == 'Admin'" class="w-52 text-sm p-0 m-0"><i>Created by: {{ caseArr.createdBy.first_name }} {{ caseArr.createdBy.last_name }}</i></p>
                                 <p class="w-52 text-sm p-0 m-0"><i>Declined by: {{ caseArr.approvedBy.first_name }} {{ caseArr.approvedBy.last_name }}</i></p>
+                                <p v-if="caseArr.reason" class="w-52 text-sm p-0 m-0"><i>Reason: {{ caseArr.reason }}</i></p>
                               </td>
                               <td class="p-3 w-52 border">
                                 <p class="w-52 text-sm p-0 m-0 uppercase">{{ caseArr.dicease.disease_name }}</p>
@@ -419,7 +421,7 @@
           addBtn: false,
           submitMsg: '',
           submitAdd: false,
-        }
+        },
       }
     },
     created(){
@@ -452,25 +454,42 @@
         })
       },
       approvePending: function(cases){
-        axios.post('api/case_status', { id: cases.id, status: 'approved' }).then(response => {
-          this.pendingCase();
-          this.allDisease();
-          this.allBarangays();
-          this.allCase();
-          this.totalBarangayCase();
-          this.totalDiseaseCase();
+        var _this = this;
+          
+        this.$refs.userLayout.prompt('Reason', function(value) {
+          axios.post('api/case_status', { 
+            id: cases.id, 
+            status: 'approved',
+            reason: value
+          }).then(response => {
+            _this.pendingCase();
+            _this.allDisease();
+            _this.allBarangays();
+            _this.allCase();
+            _this.totalBarangayCase();
+            _this.totalDiseaseCase();
+          });
         });
       },
-      cancelPending: function(cases, role){
+      cancelPending: function(cases, role) {
+        var _this = this;
+        
         if(role === "Staff"){
-          axios.post('api/case_delete', { id: cases.id }).then(response => {
-            this.pendingCase();
+          axios.post('api/case_delete', {id: cases.id})
+            .then(response => {
+            _this.pendingCase();
           });
-        }else if(role === "Admin"){
-          axios.post('api/case_status', { id: cases.id, status: 'declined' }).then(response => {
-            this.pendingCase();
-            this.declineCase();
-          });
+        } else if(role === "Admin") {
+          this.$refs.userLayout.prompt('Reason', function(value) {
+            axios.post('api/case_status', { 
+              id: cases.id, 
+              status: 'declined', 
+              reason: value 
+            }).then(response => {
+              _this.pendingCase();
+              _this.declineCase();
+            });
+          })
         }
       },
       pendingCase: function(){

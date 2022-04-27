@@ -10,6 +10,9 @@ import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
 import Vuelidate from 'vuelidate';
 import ToggleButton from 'vue-js-toggle-button';
+import PromptDialog from '@/Pages/Components/PromptDialog';
+Vue.component('prompt-dialog', PromptDialog);
+
 // import VuePhoneNumberInput from 'vue-phone-number-input';
 // import 'vue-phone-number-input/dist/vue-phone-number-input.css';
  

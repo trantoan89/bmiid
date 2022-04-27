@@ -171,6 +171,7 @@
         </div>
       </div>
     </div>
+    <prompt-dialog ref="promptDialog"></prompt-dialog>
   </div>
 </template>
 
@@ -179,7 +180,9 @@
   import vClickOutside from 'v-click-outside';
 
   export default {
-    props: ['pendingCases'],
+    props: {
+      'pendingCases': Number,
+    },
     data() {
       return {
         dropdownPopoverShow: false,
@@ -229,6 +232,10 @@
       }
     },
     methods: {
+        prompt(title, callback) {
+            this.$refs.promptDialog.modalOpen(title, callback);
+        },
+        
       logout() {
         this.$inertia.post(route('logout'));
       },
