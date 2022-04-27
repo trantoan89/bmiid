@@ -1,6 +1,15 @@
 # bmiid
 Add features and bug fix.  
 
+2022-02-22
 1. Fix login issue.  
 2. PDF report generation. Report for a disease in a year or a month.  
+
+2022-04-17
+1. Fix forgot password.
+2. Remove "select all" on daily news view.
+3. Add pagination on view tables.
+4. Fix search for disease table.
+5. Send an email for feedbacks on contact us page.
+6. Predefine reason for declining cases on case webpage. And staff access should see the reason why the case he/she entered is declined
 
