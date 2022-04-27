@@ -60,7 +60,6 @@ class CasesController extends Controller
         }else{
             $cases = CasesResource::collection(CasesModel::with('disease')->with('barangay')->with('createdBy')->with('approvedBy')->where('status', 'declined')->where('created_by', Auth::user()->id)->get());
         }
-        Log::info('',[''=>$cases]);
         return $cases;
         $cases = $cases->toArray($request);
         $perPage = 10;
