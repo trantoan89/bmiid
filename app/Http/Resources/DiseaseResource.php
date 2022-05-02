@@ -20,8 +20,8 @@ class DiseaseResource extends JsonResource
             'id' => $this->id,
             'disease_name' => $this->disease_name,
             'description' => $this->description,
-            'homepage' => $this->homepage,
-            'archive' => $this->archive,
+            'homepage' => (int)$this->homepage,
+            'archive' => (int)$this->archive,
             'risk' => new RiskResource($this->risk),
         ];
     }
