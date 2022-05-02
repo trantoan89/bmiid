@@ -1,5 +1,5 @@
 <template>
-  <user-layout>
+  <user-layout ref="userLayout">
     <template #header>
       <h2>
         Baguio Disease
@@ -78,11 +78,11 @@
         <h1 class="font-extrabold text-sm md:text-base md:text-2xl uppercase mb-5">Disease List</h1>
         <form class="flex" v-on:submit.prevent="submitSearch">
           <input :sync="true" class="px-3 py-2" type="text" v-model="searchInput" placeholder="Disease name"/>
-          <select class="px-3 py-2" v-model="searchInputArchive">
+          <!-- <select class="px-3 py-2" v-model="searchInputArchive">
             <option value="" selected>All</option>
             <option :value="true">Archives</option>
             <option :value="false">Not Archive</option>
-          </select>
+          </select> -->
           <button class="px-3 py-2 border border-blue-500 hover:border-blue-700 text-blue-500 hover:text-blue-700 cursor-pointer">Search</button>
         </form>
         <div class="w-full mt-5 overflow-x-auto overflow-y-auto z-0" style="max-height:700px;">
@@ -114,8 +114,8 @@
                   </td>
                   <td class="p-3 w-16 border">
                     <div class="w-16">
-                      <toggle-button :sync="true" v-on:change="showNews(disease, $event)" v-if="!disease.homepage" :labels="{checked: 'shown', unchecked: 'show'}" :width="70" :disabled="false"/>
-                      <toggle-button :sync="true" v-if="disease.homepage" :value="true" :labels="{checked: 'shown', unchecked: 'show'}" :width="70" :disabled="true"/>
+                      <toggle-button :sync="true" v-on:change="showNews(disease, $event)" v-if="!disease.homepage" :labels="{checked: 'shown', unchecked: 'show'}" :width="70"/>
+                      <toggle-button :sync="true" v-if="disease.homepage" :value="true" :labels="{checked: 'shown', unchecked: 'show'}" :width="70"/>
                     </div>
                   </td>
                 </tr>
@@ -126,7 +126,7 @@
         <p v-if="diseases.length < 1" class="text-base text-center mt-1"><i>No disease added.</i></p>
       </div>
       
-      <transiton name="fade">
+      <transition name="fade">
         <!-- Edit Disease Modal -->
         <div v-if="modalEditDiseaseOpen" class="flex items-center justify-center fixed left-0 bottom-0 w-full h-full bg-gray-800 z-50 bg-opacity-80">
           <div class="bg-white rounded-lg w-3/4 relative">
@@ -236,7 +236,7 @@
             </div>
           </div>
         </div>
-      </transiton>
+      </transition>
     </div>
   </user-layout>
 </template>
@@ -385,6 +385,10 @@
         axios.post('api/disease_delete', this.delDiseaseForm).then(response => {
           this.allDisease();
           this.modalDeleteOpen = false;
+          
+          this.$refs.userLayout.alert('', 
+            '<span class="text-red-700 font-bold">' + response.data.message + '</span>'
+          );
         })
       },
       diseaseDelete: function(disease){

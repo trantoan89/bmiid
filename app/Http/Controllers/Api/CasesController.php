@@ -317,6 +317,7 @@ class CasesController extends Controller
       $update = CasesModel::find($request->id);
       $update->status = $request->status;
       $update->approved_by = Auth::user()->id;
+      $update->reason = $request->reason;
       
       if($update->save()){
         return response()->json([
@@ -348,7 +349,7 @@ class CasesController extends Controller
       }else{
         return response()->json([
           'status_code' => '204',
-          'message' => 'Error in adding disease',
+          'message' => 'Error in delete disease',
         ]);
       }
     }

@@ -27,6 +27,7 @@ class CasesResource extends JsonResource
             'disease_id' => $this->disease_id,
             'created_by' => $this->created_by,
             'approved_by' => $this->approved_by,
+            'reason' => $this->reason,
             'dicease' => new DiseaseResource($this->disease),
             'barangay' => new BarangayResource($this->barangay),
             'createdBy' => new UserResource($this->createdBy),

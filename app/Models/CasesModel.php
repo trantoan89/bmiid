@@ -24,6 +24,7 @@ class CasesModel extends Model
         'status',
         'created_by',
         'approved_by',
+        'reason'
     ];
 
     public function disease()
