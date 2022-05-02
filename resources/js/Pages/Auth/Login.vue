@@ -12,7 +12,7 @@
           <form class="w-full" v-on:submit.prevent="submit">
             <div class="flex mt-5 flex-col mb-2">
               <!-- <label class="mb-2 text-base" for="username">Username</label> -->
-              <input class="py-2 px-3 text-grey-darkest" v-model="form.username" :class="{'border-2 border-red-700' : validation.usernameErr}" placeholder="username" type="text" name="username" id="username" maxlength="50">
+              <input class="py-2 px-3 text-grey-darkest" v-model="form.username" :class="{'border-2 border-red-700' : validation.usernameErr}" placeholder="username" type="text" name="username" id="username" maxlength="50" v-focus>
               <p v-if="validation.usernameErr" class="text-sm text-red-700">{{ validation.usernameMsg }}</p>
             </div>
             <div class="flex flex-col mb-4">
@@ -66,6 +66,13 @@
       document.title = "BMIID(Login)";
 
       // this.index();
+    },
+    directives: {
+        focus: {
+            inserted(el) {
+                el.focus()
+            }
+        }
     },
     methods: {
       submit: function(){

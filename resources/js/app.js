@@ -13,6 +13,9 @@ import ToggleButton from 'vue-js-toggle-button';
 import PromptDialog from '@/Pages/Components/PromptDialog';
 Vue.component('prompt-dialog', PromptDialog);
 
+import AlertDialog from '@/Pages/Components/AlertDialog';
+Vue.component('alert-dialog', AlertDialog);
+
 // import VuePhoneNumberInput from 'vue-phone-number-input';
 // import 'vue-phone-number-input/dist/vue-phone-number-input.css';
  
@@ -37,6 +40,11 @@ window.getPaginatedData = function (vue_com, prop, pg_link, pg_id, url, http_met
         data: data
     }
     axios(config).then(response => {
+        if (!response || !response.hasOwnProperty('data') ||
+            !Array.isArray(response.data)) {
+            vue_com[pg_link] = 'Error when loading data. Please reload page.';
+            return;
+        }
         vue_com[prop] = response.data[0];
         vue_com[pg_link] = response.data[1];
         

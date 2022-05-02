@@ -1,5 +1,5 @@
 <template>
-  <user-layout>
+  <user-layout ref="userLayout">
     <template #header>
       <h2>
         Daily news
@@ -57,7 +57,7 @@
                 <tr :key="newsArr.id">
                   <td class="p-3 border">
                     <div class="w-4 text-sm md:text-base flex justify-center flex-wrap content-center">
-                      <input v-if="!newsArr.show" type="checkbox" :value="newsArr.id" v-model="newsIds" v:on:click="select" class="h-4 w-4 text-gray-700 border rounded mr-2 cursor-pointer">
+                      <input type="checkbox" :value="newsArr.id" v-model="newsIds" v:on:click="select" class="h-4 w-4 text-gray-700 border rounded mr-2 cursor-pointer">
                     </div>
                   </td>
                   <!-- <td class="p-3 border">
@@ -80,8 +80,8 @@
                   </td>
                   <td class="p-3 border">
                     <div class="w-16">
-                      <toggle-button :sync="true" v-on:change="showNews(newsArr, $event)" v-if="!newsArr.show" :labels="{checked: 'shown', unchecked: 'show'}" :width="70" :disabled="false"/>
-                      <toggle-button :sync="true" v-if="newsArr.show" :value="true" :labels="{checked: 'shown', unchecked: 'show'}" :width="70" :disabled="true"/>
+                      <toggle-button :sync="true" v-on:change="showNews(newsArr, $event)" v-if="!newsArr.show" :labels="{checked: 'shown', unchecked: 'show'}" :width="70"/>
+                      <toggle-button :sync="true" v-if="newsArr.show" :value="true" :labels="{checked: 'shown', unchecked: 'show'}" :width="70"/>
                     </div>
                   </td>
                 </tr>
@@ -304,7 +304,9 @@
             this.validation.submitMsg = response.data.message;
             this.validation.submitForm = false;
             this.getNews();
-            this.newsForm.reset();
+            // this.newsForm.reset();
+            this.newsForm.date = '';
+            this.newsForm.content = '';
           })
         }else{
           this.validation.submitForm = false;
@@ -356,7 +358,8 @@
 
         axios.post('/api/news_delete', { ids: ids, val: val }).then(response => {
           this.getNews();
-          this.deletedMsg = response.data.message;
+          this.deletedMsg = '';
+          this.$refs.userLayout.alert('', response.data.message);
           this.deletedTrue = true;
           this.validation.deleteForm = false;
           this.modalDeleteOpen = false;

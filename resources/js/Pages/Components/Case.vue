@@ -462,6 +462,8 @@
             status: 'approved',
             reason: value
           }).then(response => {
+            _this.$refs.userLayout.alert('Case status', response.data.message);
+            
             _this.pendingCase();
             _this.allDisease();
             _this.allBarangays();
@@ -477,6 +479,7 @@
         if(role === "Staff"){
           axios.post('api/case_delete', {id: cases.id})
             .then(response => {
+            _this.$refs.userLayout.alert('Case status', response.data.message);
             _this.pendingCase();
           });
         } else if(role === "Admin") {
@@ -486,6 +489,7 @@
               status: 'declined', 
               reason: value 
             }).then(response => {
+              _this.$refs.userLayout.alert('Case status', response.data.message);
               _this.pendingCase();
               _this.declineCase();
             });

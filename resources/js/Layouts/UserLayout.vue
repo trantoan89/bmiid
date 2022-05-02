@@ -172,6 +172,7 @@
       </div>
     </div>
     <prompt-dialog ref="promptDialog"></prompt-dialog>
+    <alert-dialog ref="alertDialog"></alert-dialog>
   </div>
 </template>
 
@@ -234,6 +235,9 @@
     methods: {
         prompt(title, callback) {
             this.$refs.promptDialog.modalOpen(title, callback);
+        },
+        alert(title, body) {
+            this.$refs.alertDialog.modalOpen(title, body);
         },
         
       logout() {
