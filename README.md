@@ -13,3 +13,13 @@ Add features and bug fix.
 5. Send an email for feedbacks on contact us page.
 6. Predefine reason for declining cases on case webpage. And staff access should see the reason why the case he/she entered is declined
 
+2022-05-02
+1. All shown button is not working.
+2. Disease list:
+    - Remove dropdown.
+    - Inform user that the disease has been successfully deleted (prompt).
+3. Daily News:
+    - Add delete.
+    - Inform user that the news has been successfully deleted (prompt).
+4. Case: Inform user that the case has been approved/declined (prompt).
+
