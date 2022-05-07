@@ -133,6 +133,7 @@
                     Generate Graph
                   </button>
                 </div>
+                <select-year-month :case-years="case_years" :default-year="chart_form.year" :callback="changeYearMonth"></select-year-month>
               </div>
             </form>
           </div>
@@ -157,7 +158,8 @@
   import Navbar from '@/Includes/navbar';
   import Footer from '@/Includes/footer';
   import PieChart from '../PieChart.js';
-  
+  import SelectYearMonth from '@/Pages/Components/SelectYearMonth';
+
   export default {
     props: {
       canLogin: Boolean,
@@ -168,7 +170,8 @@
     components: {
        'navbar': Navbar,
        'footers': Footer,
-       'piechart': PieChart
+       'piechart': PieChart,
+       'select-year-month': SelectYearMonth,
     },
     data(){
       return {
@@ -255,11 +258,14 @@
         chart_form: {
           disease_id: '',
           barangay_id: '',
+          year: case_years.at(-1),
+          month: 0
         },
         chartValidations: {
           monthErr: false,
           monthMsg: '',
-        }
+        },
+        case_years: case_years
       };
     },
     created(){
@@ -267,10 +273,10 @@
 
       var currentTime = new Date();
       var year = currentTime.getFullYear();
-      this.chart_form.month = ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][currentTime.getMonth()];
       this.countYear = year - this.currYear;
-      this.chart_form.year = year;
       this.chart_form.barangay_id = "Baguio";
+      // this.chart_form.month = ['January','February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][currentTime.getMonth()];
+      // this.chart_form.year = year;
 
       axios.get('/api/allbarangay').then((response) => {
         this.barangays = response.data.data;
@@ -348,7 +354,6 @@
       chartForm: function()
       {
         axios.post('/api/map_filter', this.chart_form ).then((response) => {
-          console.log(response.data);
           var active = Math.abs(response.data.active - (response.data.deceased + response.data.recovered));
           var deceased = response.data.deceased;
           var recovered = response.data.recovered;
@@ -391,6 +396,10 @@
           
         // }
       },
+      changeYearMonth: function(year, month) {
+        this.chart_form.year = year;
+        this.chart_form.month = month;
+      }
     }
 	}
 </script>

@@ -43,6 +43,9 @@
               <option v-for="names in disease_names" :key="names.id" :value="names.id">{{ names.disease_name }}</option>
             </select>
           </div>
+          <div class="flex justify-center pt-5 font-extrabold">
+            <select-year-month :case-years="case_years" :default-year="case_stat.year" :callback="changeYearMonth"></select-year-month>
+          </div>
         </div>
         <div class="mt-16 block w-9/12 md:w-11/12 mx-auto">
           <h1 class="text-3xl tracking-wide md:text-4xl">Health Tips for Covid-19</h1>
@@ -124,6 +127,7 @@
 <script>
   import Navbar from '@/Includes/navbar';
   import Footers from '@/Includes/footer';
+  import SelectYearMonth from '@/Pages/Components/SelectYearMonth';
 
   export default {
     props: {
@@ -134,7 +138,8 @@
     },
     components: {
       'footers': Footers,
-      'navbar': Navbar, 
+      'navbar': Navbar,
+      'select-year-month': SelectYearMonth,
     },
     data() {
       return {
@@ -147,10 +152,15 @@
         deceased: 0,
         recovered: 0,
         total: 0,
+        case_years: case_years,
+        case_stat: { 
+          year: case_years.at(-1),
+          month: 0
+        },
       }
     },
     created (){
-      document.title = "BMIID(Home)";
+      document.title = "BMIID(News & Tips)";
       
       axios.get('/api/news').then((response) => {
         this.news_content = response.data.data.news_description;
@@ -177,7 +187,11 @@
         })
       },
       onChange: function(){
-        axios.post('/api/count-cases2', { id: this.case_name }).then((response) => {
+        axios.post('/api/count-cases2', {
+            id: this.case_name,
+            y: this.case_stat.year,
+            m: this.case_stat.month
+        }).then((response) => {
           this.active = response.data.active - (response.data.deceased + response.data.recovered);
           this.deceased = response.data.deceased;
           this.recovered = response.data.recovered;
@@ -185,6 +199,11 @@
         }).catch((error) => {
           console.log(error);
         })
+      },
+      changeYearMonth: function(year, month) {
+        this.case_stat.year = year;
+        this.case_stat.month = month;
+        this.onChange();
       }
     }
   }

@@ -27,6 +27,11 @@
     <script>
         const case_min_year = {{ \App\Models\CasesModel::minYear() }};
         
+        const case_years = (function() {
+            const length = (new Date()).getFullYear() - case_min_year + 1;
+            return Array.from({ length }, (_, i) => case_min_year + i);
+        })();
+        
         @if (session('screen_msg'))
             alert('{{ session('screen_msg') }}');
         @endif

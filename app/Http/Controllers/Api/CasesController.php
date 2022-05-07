@@ -111,6 +111,26 @@ class CasesController extends Controller
 
     public function mapSearch(Request $request)
     {
+        $q = CasesModel::where('disease_id', $request->disease_id)
+                       ->where('status', 'approved');
+                
+        if ($request->barangay_id != "Baguio") {
+            $q->where('barangay_id', $request->barangay_id);
+        }
+        
+        if ($request->year) {
+            $q->whereYear('case_date', $request->year);
+            
+            if ($request->month) {
+                $q->whereMonth('case_date', $request->month);
+            }
+        }
+
+        $active    = $q->get()->sum('active');
+        $deceased  = $q->get()->sum('deceased');
+        $recovered = $q->get()->sum('recovered');
+
+/*
       if($request->barangay_id === "Baguio"){
         $active = CasesModel::where('disease_id', $request->disease_id)->where('status', 'approved')->get()->sum('active');
         $deceased = CasesModel::where('disease_id', $request->disease_id)->where('status', 'approved')->get()->sum('deceased');
@@ -120,7 +140,7 @@ class CasesController extends Controller
         $deceased = CasesModel::where('disease_id', $request->disease_id)->where('barangay_id', $request->barangay_id)->where('status', 'approved')->get()->sum('deceased');
         $recovered = CasesModel::where('disease_id', $request->disease_id)->where('barangay_id', $request->barangay_id)->where('status', 'approved')->get()->sum('recovered');
       }
-    
+*/
       return response()->json([
         'active' => $active,
         'deceased' => $deceased,

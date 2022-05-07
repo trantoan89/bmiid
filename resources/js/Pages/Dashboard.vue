@@ -172,9 +172,10 @@
     created(){
       document.title = "BMIID(Dashboard)";
       
-        const year = (new Date()).getFullYear();
-        const length = year - case_min_year + 1;
-        this.case_years = Array.from({ length }, (_, i) => case_min_year + i);
+        // const year = (new Date()).getFullYear();
+        // const length = year - case_min_year + 1;
+        // this.case_years = Array.from({ length }, (_, i) => case_min_year + i);
+        this.case_years = case_years;
 
       this.allDisease();
       this.totalDiseaseCase();

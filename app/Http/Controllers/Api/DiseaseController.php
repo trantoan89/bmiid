@@ -64,9 +64,28 @@ class DiseaseController extends Controller
 
     public function countCases2(Request $request)
     {
-      $active = CasesModel::where('disease_id', $request->id)->where('status', 'approved')->get()->sum('active');
-      $deceased = CasesModel::where('disease_id', $request->id)->where('status', 'approved')->get()->sum('deceased');
-      $recovered = CasesModel::where('disease_id', $request->id)->where('status', 'approved')->get()->sum('recovered');
+        $id = $request->id;
+        $year = $request->y;
+        $month = $request->m;
+        
+        $q = CasesModel::where('disease_id', $id)
+                ->where('status', 'approved');
+        
+        if ($year) {
+            $q->whereYear('case_date', $year);
+            
+            if ($month) {
+                $q->whereMonth('case_date', $month);
+            }
+        }
+        
+        $active    = $q->get()->sum('active');
+        $deceased  = $q->get()->sum('deceased');
+        $recovered = $q->get()->sum('recovered');
+
+      // $active    = CasesModel::where('disease_id', $id)->where('status', 'approved')->get()->sum('active');
+      // $deceased  = CasesModel::where('disease_id', $id)->where('status', 'approved')->get()->sum('deceased');
+      // $recovered = CasesModel::where('disease_id', $id)->where('status', 'approved')->get()->sum('recovered');
       $total = $deceased + $recovered + ($active - ($deceased + $recovered));
 
       return response()->json([
