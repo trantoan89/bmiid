@@ -19,7 +19,7 @@ use App\Http\Controllers\ContactController;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('Map', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -31,7 +31,7 @@ Route::post('/login', [LoginController::class, 'authenticate']);
 
 Route::inertia('/about', 'About');
 Route::inertia('/contact', 'Contact');
-Route::inertia('/map', 'Map');
+Route::inertia('/newstips', 'Welcome');
 Route::inertia('/forgot-password', 'Auth/ForgotPassword');
 
 Route::post('/contact/send', [ContactController::class, 'send']);

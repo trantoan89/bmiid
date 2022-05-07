@@ -15,8 +15,8 @@
       <inertia-link href="/">
         <li class="p-7 cursor-pointer homeLink hover:border-black">Home</li>
       </inertia-link>
-      <inertia-link href="/map">
-        <li class="p-7 linkHover cursor-pointer" :class="{'active': $inertia.page.url.startsWith('/map')}">Map</li>
+      <inertia-link href="/newstips">
+        <li class="p-7 linkHover cursor-pointer" :class="{'active': $inertia.page.url.startsWith('/newstips')}">News & Tips</li>
       </inertia-link>
       <inertia-link href="/about">
         <li class="p-7 linkHover cursor-pointer" :class="{'active': $inertia.page.url.startsWith('/about')}">About</li>
@@ -37,8 +37,8 @@
           <inertia-link href="/">
             <li class="p-7 cursor-pointer homeLink hover:border-black">Home</li>
           </inertia-link>
-          <inertia-link href="/map">
-            <li class="p-7 homeLink hover:border-black cursor-pointer" :class="{'active': $inertia.page.url.startsWith('/map')}">Map</li>
+          <inertia-link href="/newstips">
+            <li class="p-7 homeLink hover:border-black cursor-pointer" :class="{'active': $inertia.page.url.startsWith('/newstips')}">News & Tips</li>
           </inertia-link>
           <inertia-link href="/about">
             <li class="p-7 homeLink hover:border-black cursor-pointer" :class="{'active': $inertia.page.url.startsWith('/about')}">About</li>
