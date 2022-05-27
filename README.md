@@ -23,3 +23,6 @@ Add features and bug fix.
     - Inform user that the news has been successfully deleted (prompt).
 4. Case: Inform user that the case has been approved/declined (prompt).
 
+2022-05-07
+1. Make this the landing page (home) and change the current (home) to "News & Tips".
+2. Add timeframe to the interactive map (year & month). Make it "select all" to choose just the year and not month.
